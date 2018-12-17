@@ -5,7 +5,12 @@ module.exports = function(app, io) {
     io.on('connection', function(socket){
       socket.on('data', function(data){
         console.log(data);
+        io.emit('message',data);
       });
+
+      socket.on('joinRoom', function(room){
+        console.log("Room Joined")
+      })
 
     });
 };

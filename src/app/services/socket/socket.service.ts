@@ -9,7 +9,10 @@ import io from "socket.io-client";
   providedIn: 'root'
 })
 export class SocketService {
-  socket;
+  
+  private socket;
+  messageObserver: Observer<any>;
+
   constructor() { }
 
   public initSocket(){
@@ -20,5 +23,21 @@ export class SocketService {
     this.socket.emit("data",data);
   }
 
+  getContent(): Observable<any> {
+   this.socket.on('message', (message) => {
+     this.messageObserver.next(message);
+   });
+   return new Observable(messageObserver => {
+     this.messageObserver = messageObserver;
+   });
+ }
 
+  private handleError(error) {
+      console.error('server error:', error);
+      if (error.error instanceof Error) {
+          let errMessage = error.error.message;
+          return Observable.throw(errMessage);
+      }
+      return Observable.throw(error || 'Socket.io server error');
+    }
 }
