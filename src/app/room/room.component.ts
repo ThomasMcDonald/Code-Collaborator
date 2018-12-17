@@ -28,6 +28,7 @@ export class RoomComponent implements OnInit {
             case "insert":
                   this.silent = true
                   console.log(this.editor);
+                  if(message.lines[0] === ""){this.editor.getEditor().session.insert(message.start, '\n')}
                   this.editor.getEditor().session.insert(message.start, message.lines[0].toString());
                   this.silent = false
                   console.log(message);
