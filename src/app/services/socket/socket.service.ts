@@ -9,7 +9,7 @@ import io from "socket.io-client";
   providedIn: 'root'
 })
 export class SocketService {
-  
+
   private socket;
   messageObserver: Observer<any>;
 
@@ -22,6 +22,14 @@ export class SocketService {
   public sendData(data){
     this.socket.emit("data",data);
   }
+
+  public joinRoom(room) {
+     this.socket.emit('subscribe', {room: room});
+ }
+
+ public leaveRoom(room) {
+     this.socket.emit('unsubscribe', {room: room});
+ }
 
   getContent(): Observable<any> {
    this.socket.on('message', (message) => {

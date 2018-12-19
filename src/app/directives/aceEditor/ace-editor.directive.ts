@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   template: `
   <div ace-editor
        [(text)]="text"
-       [mode]="Java"
+       [mode]="html"
        [theme]="'eclipse'"
        [options]="options"
        [readOnly]="false"

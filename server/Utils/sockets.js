@@ -8,9 +8,15 @@ module.exports = function(app, io) {
         socket.broadcast.emit('message',data);
       });
 
-      socket.on('joinRoom', function(room){
-        console.log("Room Joined")
-      })
+      socket.on('subscribe', function(content) {
+        console.log('joining room', content.room);
+        socket.join(content.room);
+      });
+
+        socket.on('unsubscribe', function(content) {
+              console.log('leaving room', content.room);
+              socket.leave(content.room);
+          })
 
     });
 };
