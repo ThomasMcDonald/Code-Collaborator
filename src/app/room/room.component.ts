@@ -1,14 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SocketService } from '../services/socket/socket.service'
 import { Subscription } from 'rxjs/Subscription';
+import * as ace from 'brace';
+import 'brace/mode/javascript';
+import 'brace/theme/monokai';
 
-import 'brace';
-import 'brace/theme/solarized_dark';
-import 'brace/mode/yaml';
-import { AceEditorComponent } from 'ng2-ace-editor';
-
-
-declare var ace:any;
 
 @Component({
   selector: 'app-room',
@@ -52,9 +48,10 @@ export class RoomComponent implements OnInit {
                   this.silent = true
                   console.log(this.editor.getEditor())
                   console.log(message)
-                  if(message.start.row === message.end.row){
+                
                     this.editor.getEditor().session.remove(new Range(message.start.row,message.start.column,message.end.row,message.end.column));
-                  }
+
+
                   this.silent = false
                   break;
           }
