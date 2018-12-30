@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import {Router, ActivatedRoute, Params} from '@angular/router';
+
 import { SocketService } from '../services/socket/socket.service'
 import { Subscription } from 'rxjs/Subscription';
 import * as ace from 'brace';
@@ -16,15 +18,16 @@ export class RoomComponent implements OnInit {
   text: string = "";
   messagesSub: Subscription;
   private silent;
-
-  constructor(private socketService: SocketService) {
+  private documentID = 0;
+  private paramsSubscribe;
+  constructor(private socketService: SocketService,private activatedRoute: ActivatedRoute, private router: Router) {
     this.socketService.initSocket();
 
-   //  this.paramsSubscribe=this.activatedRoute.params.subscribe(params => {
-   //   this.socketService.leaveRoom(this.channelID);
-   //   this.documentID = params['documentID'];
-   //   this.socketService.joinRoom(this.documentID);
-   // });
+    this.paramsSubscribe=this.activatedRoute.params.subscribe(params => {
+     this.socketService.leaveRoom(this.documentID);
+     this.documentID = params['documentID'];
+     this.socketService.joinRoom(this.documentID);
+   });
   }
 
   ngOnInit() {
@@ -37,7 +40,7 @@ export class RoomComponent implements OnInit {
           switch(message.action){
             case "insert":
                   this.silent = true
-                  console.log(this.editor);
+                  console.log(this.editor.getEditor().session.getValue());
 
                   if(message.lines.length > 1){
                       if(message.lines[0] === ""){this.editor.getEditor().session.insert(message.start, '\n')}
@@ -56,6 +59,11 @@ export class RoomComponent implements OnInit {
                   this.editor.getEditor().session.remove(new Range(message.start.row,message.start.column,message.end.row,message.end.column));
                   this.silent = false
                   break;
+            case "cursorPos":
+                  break;
+
+            case "selection":
+                  break;
           }
         }catch(e){
           console.log(e);
@@ -67,10 +75,14 @@ export class RoomComponent implements OnInit {
 
       }
 
+  ngOnDestroy() {
+          this.messagesSub.unsubscribe();
+          this.paramsSubscribe.unsubscribe();
+      }
 
-    sendData(e){
+  sendData(message){
       if(this.silent) return;
-      this.socketService.sendData(e);
+      this.socketService.sendData(this.documentID,message);
     }
 
     insertLines(message){

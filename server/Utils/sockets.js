@@ -5,7 +5,7 @@ module.exports = function(app, io) {
     io.on('connection', function(socket){
       socket.on('data', function(data){
         console.log(data);
-        socket.broadcast.emit('message',data);
+        socket.to(data.room).emit('message',data.msg);
       });
 
       socket.on('subscribe', function(content) {

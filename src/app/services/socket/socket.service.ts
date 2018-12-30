@@ -19,8 +19,8 @@ export class SocketService {
     this.socket = io.connect('http://localhost:8080');
   }
 
-  public sendData(data){
-    this.socket.emit("data",data);
+  public sendData(room,data){
+    this.socket.emit("data",{room:room, msg:data});
   }
 
   public joinRoom(room) {
