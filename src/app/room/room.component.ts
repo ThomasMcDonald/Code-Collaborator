@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener  } from '@angular/core';
 import {Router, ActivatedRoute, Params} from '@angular/router';
-
+import { Title }     from '@angular/platform-browser';
 import { SocketService } from '../services/socket/socket.service'
 import { Subscription } from 'rxjs/Subscription';
 import * as ace from 'brace';
@@ -13,20 +13,30 @@ import 'brace/theme/monokai';
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css']
 })
+
 export class RoomComponent implements OnInit {
   @ViewChild('editor') editor;
   text: string = "";
   messagesSub: Subscription;
+  private document = {
+    ID: null as number,
+    title: null as string,
+    created: null as string,
+
+  };
+
   private silent;
-  private documentID = 0;
   private paramsSubscribe;
-  constructor(private socketService: SocketService,private activatedRoute: ActivatedRoute, private router: Router) {
+  private date;
+  constructor(private socketService: SocketService,private activatedRoute: ActivatedRoute, private router: Router,private titleService: Title ) {
     this.socketService.initSocket();
+    this.document.created = new Date().toString();
 
     this.paramsSubscribe=this.activatedRoute.params.subscribe(params => {
-     this.socketService.leaveRoom(this.documentID);
-     this.documentID = params['documentID'];
-     this.socketService.joinRoom(this.documentID);
+     this.socketService.leaveRoom(this.document.ID); // Leavbing the group before joining a new one, Default is null.
+     this.document.ID = params['documentID'];
+     this.titleService.setTitle(this.document.created);
+     this.socketService.joinRoom(this.document.ID); // Join new group
    });
   }
 
@@ -82,7 +92,7 @@ export class RoomComponent implements OnInit {
 
   sendData(message){
       if(this.silent) return;
-      this.socketService.sendData(this.documentID,message);
+      this.socketService.sendData(this.document.ID,message);
     }
 
     insertLines(message){
@@ -93,6 +103,37 @@ export class RoomComponent implements OnInit {
         this.editor.getEditor().session.insert(message.start, '\n');
       }
     }
+
+
+    onKeyDown($event): void {
+    // Detect platform
+    if(navigator.platform.match('Mac')){
+        this.handleMacKeyEvents($event);
+    }
+    else {
+        this.handleWindowsKeyEvents($event);
+    }
+  }
+
+  handleMacKeyEvents($event) {
+    // MetaKey documentation
+    // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/metaKey
+    let charCode = String.fromCharCode($event.which).toLowerCase();
+    if ($event.metaKey && charCode === 's') {
+        // Action on Cmd + S
+        $event.preventDefault();
+        console.log("Save key pressed")
+    }
+  }
+
+  handleWindowsKeyEvents($event) {
+    let charCode = String.fromCharCode($event.which).toLowerCase();
+    if ($event.ctrlKey && charCode === 's') {
+        // Action on Ctrl + S
+        console.log("Save key pressed")
+        $event.preventDefault();
+    }
+  }
 
 
 }
