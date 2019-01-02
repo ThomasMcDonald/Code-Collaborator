@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "MEAN-Stack-Code-Collaborator": {
+    "code-therapy": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/MEAN-Stack-Code-Collaborator",
+            "outputPath": "dist/code-therapy",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -50,18 +50,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "MEAN-Stack-Code-Collaborator:build"
+            "browserTarget": "code-therapy:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "MEAN-Stack-Code-Collaborator:build:production"
+              "browserTarget": "code-therapy:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "MEAN-Stack-Code-Collaborator:build"
+            "browserTarget": "code-therapy:build"
           }
         },
         "test": {
@@ -95,7 +95,7 @@
         }
       }
     },
-    "MEAN-Stack-Code-Collaborator-e2e": {
+    "code-therapy-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "targets": {
@@ -103,11 +103,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "MEAN-Stack-Code-Collaborator:serve"
+            "devServerTarget": "code-therapy:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "MEAN-Stack-Code-Collaborator:serve:production"
+              "devServerTarget": "code-therapy:serve:production"
             }
           }
         },
@@ -123,5 +123,5 @@
       }
     }
   },
-  "defaultProject": "MEAN-Stack-Code-Collaborator"
+  "defaultProject": "code-therapy"
 }

@@ -11,7 +11,7 @@ var bodyPaser = bodyParser.json()
 
 var port = process.env.PORT || 8080;
 
-app.use(express.static(__dirname + '/dist/MEAN-Stack-Code-Collaborator'));
+app.use(express.static(__dirname + '/dist/code-therapy'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyPaser);
 
