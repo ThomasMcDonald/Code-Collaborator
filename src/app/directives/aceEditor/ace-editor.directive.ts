@@ -11,7 +11,7 @@ import { Component } from '@angular/core';
        [autoUpdateContent]="true"
        [durationBeforeCallback]="1000"
        (textChanged)="onChange($event)"
-       style="min-height: 200px; width:100%; overflow: auto;"></div>
+       ></div>
   `
 })
 
@@ -19,7 +19,7 @@ export class AceEditorDirective {
   text:string = "";
   options:any = {maxLines: 1000, printMargin: false};
 
-
+// style="min-height: 200px; width:100%; overflow: auto;"
   constructor() { }
 
   onChange(code) {

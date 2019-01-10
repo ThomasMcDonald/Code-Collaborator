@@ -12,15 +12,15 @@ export class SocketService {
 
   private socket;
   messageObserver: Observer<any>;
-
+  cursorObserver: Observer<any>;
   constructor() { }
 
   public initSocket(){
     this.socket = io.connect('http://localhost:8080');
   }
 
-  public sendData(room,data){
-    this.socket.emit("data",{room:room, msg:data});
+  public sendData(type,room,data){
+    this.socket.emit("data",{type:type,room:room, msg:data});
   }
 
   public joinRoom(room) {
@@ -39,6 +39,15 @@ export class SocketService {
      this.messageObserver = messageObserver;
    });
  }
+
+ getCursor(): Observable<any> {
+  this.socket.on('cursor', (message) => {
+    this.cursorObserver.next(message);
+  });
+  return new Observable(cursorObserver => {
+    this.cursorObserver = cursorObserver;
+  });
+}
 
   private handleError(error) {
       console.error('server error:', error);

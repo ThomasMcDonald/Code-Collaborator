@@ -18,12 +18,15 @@ export class RoomComponent implements OnInit {
   @ViewChild('editor') editor;
   text: string = "";
   messagesSub: Subscription;
+  cursorSub: Subscription;
   private document = {
     ID: null as number,
     title: null as string,
     created: null as string,
 
   };
+
+  private userLocation;
 
   private silent;
   private paramsSubscribe;
@@ -42,7 +45,9 @@ export class RoomComponent implements OnInit {
 
   ngOnInit() {
     let Range = require('brace').acequire('ace/range').Range;
-    this.editor.getEditor().on("change", data => this.sendData(data));
+    this.editor.getEditor().on("change", data => this.sendData("message", data)); // Pass message data onto sendData function
+    this.editor.getEditor().selection.on('changeCursor', data => this.sendData("cursor",this.editor.getEditor().getCursorPosition()));
+
 
     this.messagesSub = this.socketService.getContent()
       .subscribe(message => {
@@ -50,8 +55,6 @@ export class RoomComponent implements OnInit {
           switch(message.action){
             case "insert":
                   this.silent = true
-                  console.log(this.editor.getEditor().session.getValue());
-
                   if(message.lines.length > 1){
                       if(message.lines[0] === ""){this.editor.getEditor().session.insert(message.start, '\n')}
                       else{
@@ -69,8 +72,6 @@ export class RoomComponent implements OnInit {
                   this.editor.getEditor().session.remove(new Range(message.start.row,message.start.column,message.end.row,message.end.column));
                   this.silent = false
                   break;
-            case "cursorPos":
-                  break;
 
             case "selection":
                   break;
@@ -79,6 +80,16 @@ export class RoomComponent implements OnInit {
           console.log(e);
         }
       });
+
+    this.cursorSub = this.socketService.getCursor()
+      .subscribe(message => {
+        if(this.userLocation != null){
+          this.editor.getEditor().session.removeMarker(this.userLocation);
+        }
+        this.userLocation = this.editor.getEditor().session.addMarker(new Range(message.row,message.column,message.row,message.column+1), "bar", true);
+        console.log(message);
+      });
+
   }
 
   ngAfterViewInit() {
@@ -90,10 +101,11 @@ export class RoomComponent implements OnInit {
           this.paramsSubscribe.unsubscribe();
       }
 
-  sendData(message){
+  sendData(type,message){
       if(this.silent) return;
-      this.socketService.sendData(this.document.ID,message);
+      this.socketService.sendData(type,this.document.ID,message);
     }
+
 
     insertLines(message){
       // This exists purely because i havent figured out how to work the insertlines function

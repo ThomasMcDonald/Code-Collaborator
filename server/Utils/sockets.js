@@ -4,8 +4,8 @@ module.exports = function(app, io) {
 
     io.on('connection', function(socket){
       socket.on('data', function(data){
-        console.log(data);
-        socket.to(data.room).emit('message',data.msg);
+        console.log(data.type + " - " + data.room);
+        socket.to(data.room).emit(data.type, data.msg);
       });
 
       socket.on('subscribe', function(content) {
