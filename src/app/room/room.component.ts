@@ -13,7 +13,7 @@ import 'brace/theme/monokai';
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css']
 })
-
+ 
 export class RoomComponent implements OnInit {
   @ViewChild('editor') editor;
   text: string = "";
@@ -26,6 +26,7 @@ export class RoomComponent implements OnInit {
 
   };
 
+  private connectedUsers = [];
   private userLocation;
 
   private silent;
