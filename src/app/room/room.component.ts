@@ -13,7 +13,7 @@ import 'brace/theme/monokai';
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css']
 })
- 
+
 export class RoomComponent implements OnInit {
   @ViewChild('editor') editor;
   text: string = "";
@@ -26,8 +26,10 @@ export class RoomComponent implements OnInit {
 
   };
 
-  private connectedUsers = [];
-  private userLocation;
+  private connectedUsers = []; // This is all user positions other than the local user
+
+  private colorPool = ["#FF0000"," #800000"," #FFFF00", "#808000", "#00FF00"," #008000", "#00FFFF"," #008080"]
+
 
   private silent;
   private paramsSubscribe;
@@ -83,12 +85,15 @@ export class RoomComponent implements OnInit {
       });
 
     this.cursorSub = this.socketService.getCursor()
-      .subscribe(message => {
-        if(this.userLocation != null){
-          this.editor.getEditor().session.removeMarker(this.userLocation);
-        }
-        this.userLocation = this.editor.getEditor().session.addMarker(new Range(message.row,message.column,message.row,message.column+1), "bar", true);
-        console.log(message);
+      .subscribe(cursorPos => {
+        console.log(cursorPos);
+
+        // This is now a desirable //
+        // if(this.userLocation != null){
+        //    this.editor.getEditor().session.removeMarker(this.userLocation);
+        //  }
+        //  this.userLocation = this.editor.getEditor().session.addMarker(new Range(message.row,message.column,message.row,message.column+1), "bar", true);
+        //  console.log(message);
       });
 
   }

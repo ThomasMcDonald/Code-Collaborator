@@ -4,15 +4,17 @@ module.exports = function(app, io, connectedUser) {
     var Users = {};
 
     io.on('connection', function(socket){
+
       socket.on('data', function(data){
-      //  console.log(data.type + " - " + data.room);
-        socket.to(data.room).emit(data.type, data.msg);
         if(data.type == "cursor") {
           for(var i=0;i<Users[data.room].length;i++){
               if(Users[data.room][i]._socket == socket.id){
                 Users[data.room][i]._cursorPos = data.msg;
+                socket.to(data.room).emit(data.type, Users[data.room][i]);
               }
           }
+        }else{
+          socket.to(data.room).emit(data.type, data.msg);
         }
       });
 
@@ -25,6 +27,7 @@ module.exports = function(app, io, connectedUser) {
         }
         else{
           Users[content.room].push(new connectedUser(socket.id,0));
+          socket.to(content.room).emit("cursor", Users[content.room][Users[content.room].length-1]);
         }
       });
 

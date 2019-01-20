@@ -4,4 +4,4 @@ var ConnectedUser = function (socket,cursorPos) {
 
 };
 
-module.exports = ConnectedUser;
+module.exports = ConnectedUser; 

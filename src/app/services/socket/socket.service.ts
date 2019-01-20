@@ -41,8 +41,8 @@ export class SocketService {
  }
 
  getCursor(): Observable<any> {
-  this.socket.on('cursor', (message) => {
-    this.cursorObserver.next(message);
+  this.socket.on('cursor', (cursorPos) => {
+    this.cursorObserver.next(cursorPos);
   });
   return new Observable(cursorObserver => {
     this.cursorObserver = cursorObserver;
