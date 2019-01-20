@@ -18,6 +18,10 @@ module.exports = function(app, io, connectedUser) {
         }
       });
 
+      socket.on('save', function(content){
+        console.log(content);
+      });
+
       socket.on('subscribe', function(content) {
         console.log('joining room', content.room);
         socket.join(content.room);
