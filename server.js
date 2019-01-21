@@ -5,6 +5,7 @@ var chalk = require('chalk');
 var logger = require('winston');
 var path = require('path');
 var connectedUser = require(__dirname + '/server/Models/connectedUser');
+var util = require(__dirname + '/server/Utils/util');
 var app = express()
 var http = require('http').Server(app)
 var bodyPaser = bodyParser.json()
@@ -39,4 +40,4 @@ var server = app.listen(port, function () {
 var io = require('socket.io').listen(server);
 
 require(__dirname + '/server/Utils/sockets')(app, io, connectedUser)
-require(__dirname + '/server/Utils/routes')(app, express, io, path)
+require(__dirname + '/server/Utils/routes')(app, express, io, path, util)

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -8,19 +9,23 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private http: HttpClient) { }
 
   ngOnInit() {
   }
 
   roomGenerate() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    this.http.get('http://localhost:8080/generateRoom') // Sending password with no hash ;)
+     .subscribe(
+       res => {
+         console.log(res)
+         this.router.navigate([res['_roomID']]);
+       },
+       err => {
+         console.log("Error occured");
+       }
+     );
 
-    for (var i = 0; i < 6; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    this.router.navigate([text]);
   }
 
 }

@@ -149,6 +149,7 @@ export class RoomComponent implements OnInit {
     if ($event.ctrlKey && charCode === 's') {
         // Action on Ctrl + S
         console.log("Save key pressed")
+        this.socketService.saveData();
         $event.preventDefault();
     }
   }

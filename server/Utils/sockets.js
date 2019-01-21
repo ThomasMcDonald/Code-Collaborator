@@ -19,7 +19,7 @@ module.exports = function(app, io, connectedUser) {
       });
 
       socket.on('save', function(content){
-        console.log(content);
+        console.log("Saving");
       });
 
       socket.on('subscribe', function(content) {
