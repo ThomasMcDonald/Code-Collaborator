@@ -1,11 +1,19 @@
 module.exports = function(mongoose) {
 
 var DocumentSchema =  mongoose.Schema({
-    _roomID: {
+  _roomID: {
     type: String,
     required:true
   },
-    _content: {
+  _title:{
+    type: String,
+    required:true
+  },
+  _dateCreated:{
+    type: String,
+    required:true
+  },
+  _content: {
     type: String,
     required: true
   }

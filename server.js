@@ -5,7 +5,7 @@ var chalk = require('chalk');
 var logger = require('winston');
 var path = require('path');
 var connectedUser = require(__dirname + '/server/Models/connectedUser');
-var util = require(__dirname + '/server/Utils/util');
+var util = require(__dirname + '/server/Utils/util')(models, logger);
 var app = express()
 var http = require('http').Server(app)
 var bodyPaser = bodyParser.json()
@@ -28,7 +28,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/codeThera
 	};
 	//Controllers - database functions
 	var controller = {
-		document: require(__dirname + '/server/Controllers/documentController')(models, logger),
+		document: require(__dirname + '/server/Controllers/documentController')(models, logger,util),
 	};
 
 var server = app.listen(port, function () {
@@ -40,4 +40,4 @@ var server = app.listen(port, function () {
 var io = require('socket.io').listen(server);
 
 require(__dirname + '/server/Utils/sockets')(app, io, connectedUser)
-require(__dirname + '/server/Utils/routes')(app, express, io, path, util)
+require(__dirname + '/server/Utils/routes')(app, express, io, path, controller, util)
