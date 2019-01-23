@@ -13,7 +13,6 @@ declare let ace: any;
 
 export class RoomComponent implements OnInit {
   @ViewChild('editor') editor;
-  text: string = "Placeholder";
   messagesSub: Subscription;
   cursorSub: Subscription;
   private document = {
@@ -115,7 +114,8 @@ export class RoomComponent implements OnInit {
       for(var i=0;i<message.lines.length;i++){
         this.editor.getEditor().session.insert(message.start, message.lines[i]);
         message.start.row++;
-        this.editor.getEditor().session.insert(message.start, '\n');
+        if(i+1 != message.lines.length)
+          this.editor.getEditor().session.insert(message.start, '\n');
       }
     }
 
