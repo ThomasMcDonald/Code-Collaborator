@@ -8,10 +8,10 @@
 
 In total you get 26 + 26 + 10 = 62 characters.
 
-6 possible string places, Gives you 62^10 possible combinations.
+10 possible string places, Gives you 62^10 possible combinations.
 That is 8.3929937*10^17 ~ 839,299,370,000,000,000 combinations == 839 quadrillion 299 trillion 370 billion combinations .
 
-This test python script I found [here](https://stackoverflow.com/a/7591126) will print out when it finds a collision, I originally had the string length set at 6 but it on average found a collision around 30k strings,
+This test python script I found [here](https://stackoverflow.com/a/7591126) will print out when it finds a collision, I originally had the string length set at 6 but on average found a collision around 30k strings.
 
 ```python
 import random
