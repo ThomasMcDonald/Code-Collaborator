@@ -3,10 +3,7 @@ import {Router, ActivatedRoute, Params} from '@angular/router';
 import { Title }     from '@angular/platform-browser';
 import { SocketService } from '../services/socket/socket.service'
 import { Subscription } from 'rxjs/Subscription';
-import * as ace from 'brace';
-import 'brace/mode/javascript';
-import 'brace/theme/monokai';
-
+declare let ace: any;
 
 @Component({
   selector: 'app-room',
@@ -16,7 +13,7 @@ import 'brace/theme/monokai';
 
 export class RoomComponent implements OnInit {
   @ViewChild('editor') editor;
-  text: string = "";
+  text: string = "Placeholder";
   messagesSub: Subscription;
   cursorSub: Subscription;
   private document = {
@@ -47,10 +44,10 @@ export class RoomComponent implements OnInit {
   }
 
   ngOnInit() {
-    let Range = require('brace').acequire('ace/range').Range;
+    const Range = ace.require('ace/range')['Range'];
     this.editor.getEditor().on("change", data => this.sendData("message", data)); // Pass message data onto sendData function
     this.editor.getEditor().selection.on('changeCursor', data => this.sendData("cursor",this.editor.getEditor().getCursorPosition()));
-
+    //this.editor.setTheme("eclipse");
 
     this.messagesSub = this.socketService.getContent()
       .subscribe(message => {

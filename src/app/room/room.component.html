@@ -1,2 +1,2 @@
 
-<ace-editor [(text)]="text" #editor id="editor" (keydown)="onKeyDown($event)"></ace-editor>
+<ace-editor #editor  id="editor" [text]="text" (keydown)="onKeyDown($event)" [autoUpdateContent]="true" mode="javascript"></ace-editor>
