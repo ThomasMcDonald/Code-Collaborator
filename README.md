@@ -8,7 +8,18 @@
 
 In total you get 26 + 26 + 10 = 62 characters.
 
-6 possible string places, Gives you 62^6 possible combinations.
-That is 56,800,235,584 ~ 57 billion combinations.
+6 possible string places, Gives you 62^10 possible combinations.
+That is 8.3929937*10^17 combinations.
 
-Haven't worked out the collision probability. Birthday Paradox.
+This test python script I found [here](https://stackoverflow.com/a/7591126) will print out when it finds a collision, I originally had the string length set at 6 but it on average found a collision around 30k strings,
+
+```python
+import random
+codes = set()
+while 1:
+        code=''.join(random.choice('1234567890qwertyuiopasdfghjklzxcvbnmABCDEFGHIJKLMNOPQRSTUVWXYZ')for x in range(10))
+        if code in codes: break
+        codes.add(code)
+print(len(codes))
+
+```

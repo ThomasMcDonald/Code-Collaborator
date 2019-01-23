@@ -5,7 +5,7 @@ module.exports = function(app, express, io,path, controller,util) {
 
 
     app.get('/generateRoom', function(req, res){
-        var ranString = util.roomGenerate();
+        var ranString = util.roomGenerate(10);
         (async function(req,res, ranString){
           return await controller.document.createDocument(ranString);
        })(req,res,ranString).then(result =>{
