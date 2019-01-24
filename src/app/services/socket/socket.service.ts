@@ -23,8 +23,8 @@ export class SocketService {
     this.socket.emit("data",{type:type,room:room, msg:data});
   }
 
-  public saveData(){
-    this.socket.emit("save",{type:""});
+  public saveData(content){
+    this.socket.emit("save",content);
   }
 
   public joinRoom(room) {

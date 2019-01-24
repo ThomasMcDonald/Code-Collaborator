@@ -1,4 +1,4 @@
-module.exports = function(app, io, connectedUser) {
+module.exports = function(app, io, connectedUser, controller) {
 
     console.log("Sockets Module Loaded")
     var Users = {};
@@ -20,6 +20,11 @@ module.exports = function(app, io, connectedUser) {
 
       socket.on('save', function(content){
         console.log("Saving");
+        (async function(){
+          return await controller.document.updateDocument(content);
+        })().then(result => {
+          console.log(result);
+        });
       });
 
       socket.on('subscribe', function(content) {

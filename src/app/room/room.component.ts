@@ -16,10 +16,10 @@ export class RoomComponent implements OnInit {
   messagesSub: Subscription;
   cursorSub: Subscription;
   private document = {
-    ID: null as number,
-    title: null as string,
-    created: null as string,
-
+    _roomID: null as number,
+    _title: null as string,
+    _created: null as string,
+    _content: null as string,
   };
 
   private connectedUsers = []; // This is all user positions other than the local user
@@ -32,13 +32,13 @@ export class RoomComponent implements OnInit {
   private date;
   constructor(private socketService: SocketService,private activatedRoute: ActivatedRoute, private router: Router,private titleService: Title ) {
     this.socketService.initSocket();
-    this.document.created = new Date().toString();
+    this.document._created = new Date().toString();
 
     this.paramsSubscribe=this.activatedRoute.params.subscribe(params => {
-     this.socketService.leaveRoom(this.document.ID); // Leavbing the group before joining a new one, Default is null.
-     this.document.ID = params['documentID'];
-     this.titleService.setTitle(this.document.created);
-     this.socketService.joinRoom(this.document.ID); // Join new group
+     this.socketService.leaveRoom(this.document._roomID); // Leavbing the group before joining a new one, Default is null.
+     this.document._roomID = params['documentID'];
+     this.titleService.setTitle(this.document._created);
+     this.socketService.joinRoom(this.document._roomID); // Join new group
    });
   }
 
@@ -105,7 +105,7 @@ export class RoomComponent implements OnInit {
 
   sendData(type,message){
       if(this.silent) return;
-      this.socketService.sendData(type,this.document.ID,message);
+      this.socketService.sendData(type,this.document._roomID,message);
     }
 
 
@@ -137,6 +137,7 @@ export class RoomComponent implements OnInit {
     if ($event.metaKey && charCode === 's') {
         // Action on Cmd + S
         $event.preventDefault();
+
         console.log("Save key pressed")
     }
   }
@@ -146,8 +147,11 @@ export class RoomComponent implements OnInit {
     if ($event.ctrlKey && charCode === 's') {
         // Action on Ctrl + S
         console.log("Save key pressed")
-        this.socketService.saveData();
         $event.preventDefault();
+
+        this.document._content = this.editor.getEditor().getValue();
+        console.log(this.document);
+        this.socketService.saveData(this.document);
     }
   }
 

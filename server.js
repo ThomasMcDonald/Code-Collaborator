@@ -39,5 +39,5 @@ var server = app.listen(port, function () {
 
 var io = require('socket.io').listen(server);
 
-require(__dirname + '/server/Utils/sockets')(app, io, connectedUser)
+require(__dirname + '/server/Utils/sockets')(app, io, connectedUser, controller)
 require(__dirname + '/server/Utils/routes')(app, express, io, path, controller, util)

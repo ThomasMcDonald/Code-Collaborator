@@ -27,17 +27,23 @@ module.exports = function(models, logger,util) {
 							});
 						});
 					},
+		retrieveDocument: async function(content){
+			return new Promise(function (resolve, reject){
+				console.log("Filler function, BRB");
+					resolve({_roomID: content});
+			})
+		},
 
 		// This function takes in a channelID and returns all messages related to that Channel
-		updateDocument: async function(channelID) {
+		updateDocument: async function(documentContent) {
 			return new Promise(function (resolve, reject) {
-				models.message.find({_channelID: channelID}).exec(function (err, messages) {
-			       if (err) {
-			         reject(err);
-			       } else if (messages) {
-			       	resolve(messages);
-			       }
-				});
+				models.document.findOneAndUpdate({_roomID: documentContent._roomID}, {$set: {_content: documentContent._content}}, function(err,doc) {
+		       if (err) {
+						  throw err;
+						} else {
+							resolve(documentContent);
+						 }
+     		});
 			});
 		}
 
