@@ -110,6 +110,8 @@ export class RoomComponent implements OnInit {
   sendData(type,message){
       if(this.silent || this.isDocLoad) return;
       this.socketService.sendData(type,this.document._roomID,message);
+      this.document._content = this.editor.getEditor().session.getDocument().$lines;
+      this.socketService.saveData(this.document);
     }
 
 
