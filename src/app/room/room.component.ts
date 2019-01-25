@@ -28,6 +28,7 @@ export class RoomComponent implements OnInit {
 
 
   private silent;
+  private isDocLoad = false;
   private paramsSubscribe;
   private date;
   constructor(private socketService: SocketService,private activatedRoute: ActivatedRoute, private router: Router,private titleService: Title ) {
@@ -72,7 +73,10 @@ export class RoomComponent implements OnInit {
                   this.silent = false
                   break;
 
-            case "selection":
+            case "newDoc":
+                  console.log(message);
+                  this.isDocLoad = true;
+                  this.insertLines(message);
                   break;
           }
         }catch(e){
@@ -104,18 +108,29 @@ export class RoomComponent implements OnInit {
       }
 
   sendData(type,message){
-      if(this.silent) return;
+      if(this.silent || this.isDocLoad) return;
       this.socketService.sendData(type,this.document._roomID,message);
     }
 
 
     insertLines(message){
       // This exists purely because i havent figured out how to work the insertlines function
-      for(var i=0;i<message.lines.length;i++){
-        this.editor.getEditor().session.insert(message.start, message.lines[i]);
-        message.start.row++;
-        if(i+1 != message.lines.length)
-          this.editor.getEditor().session.insert(message.start, '\n');
+      if(message.lines){
+        for(var i=0;i<message.lines.length;i++){
+          this.editor.getEditor().session.insert(message.start, message.lines[i]);
+          message.start.row++;
+          if(i+1 != message.lines.length)
+            this.editor.getEditor().session.insert(message.start, '\n');
+        }
+      }else{
+        var start = {row:0, column: 0};
+        for(var i=0;i<message._content.length;i++){
+          this.editor.getEditor().session.insert(start, message._content[i]);
+          start.row++;
+          if(i+1 != message._content.length)
+            this.editor.getEditor().session.insert(start, '\n');
+        }
+        this.isDocLoad = false;
       }
     }
 
@@ -149,7 +164,7 @@ export class RoomComponent implements OnInit {
         console.log("Save key pressed")
         $event.preventDefault();
 
-        this.document._content = this.editor.getEditor().getValue();
+        this.document._content = this.editor.getEditor().session.getDocument().$lines;
         console.log(this.document);
         this.socketService.saveData(this.document);
     }

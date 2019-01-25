@@ -11,7 +11,7 @@ module.exports = function(models, logger,util) {
 						         reject(err);
 						       } else if (document.length == 0) {
 										 	var docoDate = new Date().toString();
-											var newDoc = new models.document({ _roomID:content, _title:docoDate,_dateCreated:docoDate, _content:"{}"});
+											var newDoc = new models.document({ _roomID:content, _title:docoDate,_dateCreated:docoDate, _content:[], action: ""});
 											newDoc.save(function (error) {
 						            if (error) {
 						            	console.log(error);
@@ -27,10 +27,17 @@ module.exports = function(models, logger,util) {
 							});
 						});
 					},
-		retrieveDocument: async function(content){
+		retrieveDocument: async function(_roomID){
 			return new Promise(function (resolve, reject){
-				console.log("Filler function, BRB");
-					resolve({_roomID: content});
+				models.document.find({_roomID: _roomID}).exec(function (err, document) {
+						 if (err) {
+							 reject(err);
+						}else {
+							document = document.find(i => i._roomID === _roomID);
+							document.action = "newDoc";
+							resolve(document)
+						}
+				});
 			})
 		},
 

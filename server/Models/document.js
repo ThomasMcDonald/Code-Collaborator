@@ -14,8 +14,12 @@ var DocumentSchema =  mongoose.Schema({
     required:true
   },
   _content: {
-    type: String,
+    type: Array,
     required: true
+  },
+  action:{
+    type: String,
+    required: false
   }
 });
 

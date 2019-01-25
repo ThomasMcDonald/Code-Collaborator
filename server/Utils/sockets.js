@@ -28,16 +28,22 @@ module.exports = function(app, io, connectedUser, controller) {
       });
 
       socket.on('subscribe', function(content) {
-        console.log('joining room', content.room);
-        socket.join(content.room);
-        if(Users[content.room] == null){
-          Users[content.room] = [];
-          Users[content.room].push(new connectedUser(socket.id,0));
-        }
-        else{
-          Users[content.room].push(new connectedUser(socket.id,0));
-          socket.to(content.room).emit("cursor", Users[content.room][Users[content.room].length-1]);
-        }
+        (async function(content){
+          return await controller.document.retrieveDocument(content.room);
+        })(content).then(result =>{
+          console.log('joining room', content.room);
+          socket.join(content.room);
+          console.log(result);
+          socket.emit("message",result);
+          if(Users[content.room] == null){
+            Users[content.room] = [];
+            Users[content.room].push(new connectedUser(socket.id,0));
+          }
+          else{
+            Users[content.room].push(new connectedUser(socket.id,0));
+            socket.to(content.room).emit("cursor", Users[content.room][Users[content.room].length-1]);
+          }
+        });
       });
 
         socket.on('unsubscribe', function(content) {
