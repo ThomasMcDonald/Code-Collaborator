@@ -20,11 +20,12 @@ module.exports = function(app, io, connectedUser, controller) {
 
       socket.on('save', function(content){
         console.log("Saving");
-        (async function(){
-          return await controller.document.updateDocument(content);
-        })().then(result => {
-          console.log(result);
-        });
+        console.log(content);
+          (async function(){
+            return await controller.document.updateDocument(content);
+          })().then(result => {
+            console.log(result);
+          });
       });
 
       socket.on('subscribe', function(content) {
