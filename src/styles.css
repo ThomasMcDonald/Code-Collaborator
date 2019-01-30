@@ -1,4 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Permanent+Marker');
+
+body {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    background-color: #3b405b;
+    font-family: monospace;
+}
+
 
 #editor {
   position: absolute;
