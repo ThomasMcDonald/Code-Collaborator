@@ -3,28 +3,32 @@ module.exports = function(models, logger,util) {
 	return {
 
 		// This function will add a message document to the message collection
-		createDocument: async function(content){
+		createDocument: async function(roomID){
 			return new Promise(function (resolve, reject) {
+				var collision = false;
+					do{
+						models.document.find({_roomID: roomID}).exec(function (err, document) {
+								 if (err) {
+									 reject(err);
+								 } else if (document.length == 0) {
+										var docoDate = new Date().toString();
+										var newDoc = new models.document({ _roomID:roomID, _title:docoDate,_dateCreated:docoDate, _content:[], action: ""});
+										newDoc.save(function (error) {
+											if (error) {
+												console.log(error);
+											}else{
+												console.log("Room created");
+												resolve({_roomID: roomID});
+										}
+									});
+								} else{
+									collision = true;
+									roomID = util.roomGenerate(10);
+									console.log("Somehow there was a collision, So we gotta reloop");
+								}
+						});
+					}while(collision)
 
-							models.document.find({_roomID: content}).exec(function (err, document) {
-						       if (err) {
-						         reject(err);
-						       } else if (document.length == 0) {
-										 	var docoDate = new Date().toString();
-											var newDoc = new models.document({ _roomID:content, _title:docoDate,_dateCreated:docoDate, _content:[], action: ""});
-											newDoc.save(function (error) {
-						            if (error) {
-						            	console.log(error);
-						            }else{
-													console.log("Room created");
-						          		resolve({_roomID: content});
-											}
-						          });
-									} else{
-										console.log("Somehow there was a collision, Ill figure out a fix in a sec :)");
-										reject("yuck");
-									}
-							});
 						});
 					},
 		retrieveDocument: async function(_roomID){
