@@ -1,0 +1,66 @@
+{
+  "name": "mean-stack-code-collaborator",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "node server.js",
+    "build": "ng build",
+    "test2": "mocha ./tests/mocha.js",
+    "test": "artillery run ./tests/stressing.yaml",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
+  },
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "chalk": "^2.4.1",
+    "core-js": "^2.5.4",
+    "cors": "^2.8.4",
+    "express": "^4.16.4",
+    "express-jwt": "^5.3.1",
+    "jsonwebtoken": "^8.4.0",
+    "mocha": "^5.2.0",
+    "mongoose": "^5.4.5",
+    "ng2-ace-editor": "^0.3.8",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "rxjs": "^6.2.2",
+    "rxjs-compat": "^6.3.3",
+    "socket.io-client": "^2.1.1",
+    "winston": "^3.1.0",
+    "zone.js": "~0.8.26"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~0.8.0",
+    "@angular/cli": "~6.2.1",
+    "@angular/compiler-cli": "^6.1.0",
+    "@angular/language-service": "^6.1.0",
+    "@types/jasmine": "~2.8.8",
+    "@types/jasminewd2": "~2.0.3",
+    "@types/node": "^8.9.5",
+    "codelyzer": "~4.3.0",
+    "jasmine-core": "~2.99.1",
+    "jasmine-spec-reporter": "~4.2.1",
+    "karma": "~3.0.0",
+    "karma-chrome-launcher": "~2.2.0",
+    "karma-coverage-istanbul-reporter": "~2.0.1",
+    "karma-jasmine": "~1.1.2",
+    "karma-jasmine-html-reporter": "^0.2.2",
+    "protractor": "~5.4.0",
+    "ts-node": "~7.0.0",
+    "tslint": "~5.11.0",
+    "typescript": "~2.9.2"
+  },
+  "description": "This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.1.",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThomasMcDonald/MEAN-Stack-Code-Collaborator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ThomasMcDonald/MEAN-Stack-Code-Collaborator/issues"
+  },
+  "homepage": "https://github.com/ThomasMcDonald/MEAN-Stack-Code-Collaborator#readme"
+}

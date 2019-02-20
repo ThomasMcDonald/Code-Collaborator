@@ -1,0 +1,10 @@
+<div class='container'>
+    <button (click)="roomGenerate()">Share Code!</button>
+</div>
+
+<ul>
+  <li *ngIf="!auth.isLoggedIn()"><a routerLink="/login">Sign in</a></li>
+  <li *ngIf="!auth.isLoggedIn()"><a routerLink="/register">Sign up</a></li>
+  <li *ngIf="auth.isLoggedIn()"><a routerLink="/codes">{{ auth.getUserDetails()?.name }}</a></li>
+  <li *ngIf="auth.isLoggedIn()"><a (click)="auth.logout()">Logout</a></li>
+</ul>
