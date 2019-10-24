@@ -28,7 +28,7 @@
     "cors": "^2.8.4",
     "express": "^4.16.4",
     "mocha": "^5.2.0",
-    "mongoose": "^5.4.5",
+    "mongoose": "^5.7.6",
     "ng2-ace-editor": "^0.3.8",
     "rxjs": "^6.2.2",
     "rxjs-compat": "^6.3.3",
@@ -37,7 +37,7 @@
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.8.0",
+    "@angular-devkit/build-angular": "~0.7.0",
     "@angular/cli": "~6.2.1",
     "@angular/compiler-cli": "^6.1.0",
     "@angular/language-service": "^6.1.0",
