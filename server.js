@@ -1,43 +1,50 @@
-var express = require('express')
-var bodyParser = require('body-parser')
-var cors = require('cors')
-var chalk = require('chalk');
-var logger = require('winston');
-var path = require('path');
-var connectedUser = require(__dirname + '/server/Models/connectedUser');
-var util = require(__dirname + '/server/Utils/util')(models, logger);
-var app = express()
-var http = require('http').Server(app)
-var bodyPaser = bodyParser.json()
-var mongoose = require('mongoose');
-var port = process.env.PORT || 8080;
+const express = require('express')
+const bodyParser = require('body-parser')
+const cors = require('cors')
+const chalk = require('chalk');
+const logger = require('winston');
+const path = require('path');
 
-app.use(express.static(__dirname + '/dist/code-therapy'));
+
+
+const util = require(__dirname + '/server/Utils/util');
+const app = express();
+
+const bodyPaser = bodyParser.json()
+const Sequelize = require('sequelize');
+
+const port = process.env.PORT || 8080;
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyPaser);
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/codeTherapy',{ useNewUrlParser: true });
-   var db = mongoose.connection;
- require(__dirname + '/server/Utils/database.js')(chalk, db);
+const sequelize = new Sequelize('code-collab', 'root', '', {
+	host: 'localhost',
+	dialect: 'mysql'
+  });
+
+  sequelize
+  .authenticate()
+  .then(() => {
+	console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+	console.error('Unable to connect to the database:', err);
+  });
 
 
-	// Models - database Schemas
-	var models = {
-		mongoose: mongoose,
-		document: require(__dirname + '/server/Models/document')(mongoose),
-	};
-	//Controllers - database functions
-	var controller = {
-		document: require(__dirname + '/server/Controllers/documentController')(models, logger,util),
-	};
-
-var server = app.listen(port, function () {
-   var host = server.address().address
-   var port = server.address().port
-   console.log("Listening on %s", port)
+const server = app.listen(port, function () {
+   const host = server.address().address
+   const port = server.address().port
+   console.log("Listening on %s %s", host, port)
 })
 
-var io = require('socket.io').listen(server);
 
-require(__dirname + '/server/Utils/sockets')(app, io, connectedUser, controller)
-require(__dirname + '/server/Utils/routes')(app, express, io, path, controller, util)
+
+
+
+// const io = require('socket.io').listen(server);
+// require(__dirname + '/server/Utils/sockets')(app, io, connectedUser, controller)
+
+require(__dirname + '/server/Utils/routes')(app, path, util)
+
