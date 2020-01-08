@@ -1,17 +1,18 @@
 import React, {Component} from 'react';
+import { useHistory } from "react-router-dom";
+import { withRouter } from 'react-router'
 import { Controlled as CodeMirror } from 'react-codemirror2';
-import styles from './dashboard.css';
+import styles from './CodeEditor.css';
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 
 import 'codemirror/mode/javascript/javascript';
 
-
-
 import axios from 'axios';
 
-class Dashboard extends Component {
+
+class CodeEditor extends Component {
     constructor(props){
         super(props);
 
@@ -25,10 +26,12 @@ class Dashboard extends Component {
         this.updateDocument = this.updateDocument.bind(this);
         this.saveDocument = this.saveDocument.bind(this);
         this.handleHotKeys = this.handleHotKeys.bind(this);
+        this.getDocument = this.getDocument.bind(this);
     }
 
     componentDidMount(){
         document.addEventListener('keydown', this.handleHotKeys);
+        this.getDocument(this.props.match.params.documentId);
     }
     
     handleHotKeys($event) {
@@ -40,6 +43,27 @@ class Dashboard extends Component {
         }
       }
 
+    getDocument = async (documentId) => {
+      if(documentId){
+        const thus = this;
+        axios.post('/getDocument',{
+            roomId: documentId
+        })
+        .then(function (response) {
+            thus.setState({ 
+              title: response.data.title,
+              room: response.data.roomID, 
+              code: response.data.content
+             })
+             document.title = response.data.title;
+
+            console.log(response);
+            })
+            .catch(function (error) {
+            console.log(error);
+            })
+      }
+    }
     saveDocument = async () => {
         if(this.state.room !== null){
             this.updateDocument();
@@ -47,12 +71,19 @@ class Dashboard extends Component {
             const thus = this;
             axios.get('/generateDocument')
             .then(function (response) {
-                thus.setState({ room: response.data.roomID })
+              thus.setState({ 
+                title: response.data.title,
+                room: response.data.roomID, 
+               })
+               // this re renders the component and calls the getDocument function again, probably should fix that
+               thus.props.history.push(`/${response.data.roomID}`);
+              // thus.props.match.params.documentId = response.data.roomID;
+              document.title = response.data.title;
                 console.log(response);
-                })
-                .catch(function (error) {
-                console.log(error);
-                })
+            })
+            .catch(function (error) {
+            console.log(error);
+            })
         }
     }
     
@@ -87,12 +118,14 @@ class Dashboard extends Component {
             lineNumbers: true,
             scrollbarStyle: null,
             lineWrapping: true,
+            autoCloseBrackets: true
           };
 
         return(
             <div>
                 <div className={styles.headerText}>
                 <h3>Room Generator</h3>
+                <p>{this.state.title}</p>
                 <p>{this.state.room}</p>
                 <button onClick={this.saveDocument}>Update</button>
                 <button onClick={this.runDocument}>Run</button>
@@ -114,4 +147,4 @@ class Dashboard extends Component {
 }
 
 
-export default Dashboard;
+export default CodeEditor;

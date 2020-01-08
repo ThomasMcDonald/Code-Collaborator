@@ -7,7 +7,11 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true
     },
     roomID: DataTypes.STRING, 
-    title: DataTypes.STRING,
+    title: {
+      field: 'title',
+      type:DataTypes.STRING,
+      defaultValue: sequelize.NOW 
+    },
     content: DataTypes.STRING,
     createdAt: {
       field: 'created_at',

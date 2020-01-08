@@ -24,6 +24,8 @@ module.exports = function(app, path, util) {
       vm.run(code);
 
       res.status(200).send("fin")
-    })
+    });
+
+    app.post('/getDocument', documentController.get);
 
 };

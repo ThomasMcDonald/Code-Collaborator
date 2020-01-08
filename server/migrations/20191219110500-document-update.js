@@ -9,7 +9,11 @@ module.exports = {
         primaryKey: true
       },
       roomID: Sequelize.STRING, 
-      title: Sequelize.STRING,
+      title: {
+        field: 'title',
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.NOW 
+      },
       content: Sequelize.STRING,
       createdAt: {
         field: 'created_at',
