@@ -39,7 +39,6 @@ module.exports = {
                 }
             })
             .then((document, created) => {
-                console.log(document, created)
                 res.status(201).send(document[0])
             })
             .catch(error => res.status(400).send(error))

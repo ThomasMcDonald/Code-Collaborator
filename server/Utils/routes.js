@@ -1,6 +1,12 @@
 const documentController = require('../controllers').Document;
+
+const fs = require('fs');
 const {NodeVM} = require('vm2');
+
+let sandBoxOuput = {}
+
 const vm = new NodeVM({
+  sandbox: { sandBoxOuput },
     require: {
         external: true
     }
@@ -19,11 +25,25 @@ module.exports = function(app, path, util) {
 
     app.post('/updateDocument', documentController.update);
 
-    app.post('/runDocument', function(req, res){
+    app.post('/runDocument', async function(req, res){
       const {code} = req.body;
-      vm.run(code);
+      const currentTime = new Date().getTime();
 
-      res.status(200).send("fin")
+
+      //write the submitted code to a file
+      // fs.writeFileSync(`./tmp/${currentTime}.js`, code);
+
+      vm.run(code, 'vm.js');
+      console.log(sandBoxOuput);
+
+      let functionWithCallbackInSandbox = vm.run(`module.exports = ${code}`);
+
+      const data = await functionWithCallbackInSandbox();
+
+      res.status(200).send(data);
+
+      // exec = require('child_process').exec;
+      
     });
 
     app.post('/getDocument', documentController.get);

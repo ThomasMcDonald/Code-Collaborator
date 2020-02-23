@@ -4,8 +4,8 @@ const cors = require('cors')
 const chalk = require('chalk');
 const logger = require('winston');
 const path = require('path');
-
-
+const io = require('socket.io')(80);
+const fs = require('fs');
 
 const util = require(__dirname + '/server/Utils/util');
 const app = express();
@@ -39,12 +39,13 @@ const server = app.listen(port, function () {
    console.log("Listening on %s %s", host, port)
 })
 
-
-
+if (!fs.existsSync('./tmp')){
+  fs.mkdirSync('./tmp');
+}
 
 
 // const io = require('socket.io').listen(server);
-// require(__dirname + '/server/Utils/sockets')(app, io, connectedUser, controller)
+require(__dirname + '/server/Utils/sockets')(app, io)
 
 require(__dirname + '/server/Utils/routes')(app, path, util)
 

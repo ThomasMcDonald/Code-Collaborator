@@ -1,4 +1,4 @@
-module.exports = function(app, io, connectedUser, controller) {
+module.exports = function(app, io) {
 
     console.log("Sockets Module Loaded")
     var Users = {};
@@ -18,16 +18,6 @@ module.exports = function(app, io, connectedUser, controller) {
         }
       });
 
-      socket.on('save', function(content){
-        console.log("Saving");
-        console.log(content);
-          (async function(){
-            return await controller.document.updateDocument(content);
-          })().then(result => {
-            console.log(result);
-          });
-      });
-
       socket.on('subscribe', function(content) {
         (async function(content){
           return await controller.document.retrieveDocument(content.room);
@@ -38,10 +28,8 @@ module.exports = function(app, io, connectedUser, controller) {
           socket.emit("message",result);
           if(Users[content.room] == null){
             Users[content.room] = [];
-            Users[content.room].push(new connectedUser(socket.id,0));
           }
           else{
-            Users[content.room].push(new connectedUser(socket.id,0));
             socket.to(content.room).emit("cursor", Users[content.room][Users[content.room].length-1]);
           }
         });
