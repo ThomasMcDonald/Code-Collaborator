@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { useHistory } from "react-router-dom";
 import { withRouter } from 'react-router'
 import { Controlled as CodeMirror } from 'react-codemirror2';
-import styles from './CodeEditor.css';
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -50,77 +49,8 @@ class CodeEditor extends Component {
             this.saveDocument()
             $event.preventDefault();
         }
-      }
-
-    getDocument = async (documentId) => {
-      if(documentId){
-        const thus = this;
-        axios.post('/getDocument',{
-            roomId: documentId
-        })
-        .then(function (response) {
-            thus.setState({ 
-              title: response.data.title,
-              room: response.data.roomID, 
-              code: response.data.content
-             })
-             document.title = response.data.title;
-
-            console.log(response);
-            })
-            .catch(function (error) {
-            console.log(error);
-            })
-      }
-    }
-    saveDocument = async () => {
-        if(this.state.room !== null){
-            this.updateDocument();
-        }else{
-            const thus = this;
-            axios.get('/generateDocument')
-            .then(function (response) {
-              thus.setState({ 
-                title: response.data.title,
-                room: response.data.roomID, 
-               })
-               // this re renders the component and calls the getDocument function again, probably should fix that
-               thus.props.history.push(`/${response.data.roomID}`);
-              // thus.props.match.params.documentId = response.data.roomID;
-              document.title = response.data.title;
-                console.log(response);
-            })
-            .catch(function (error) {
-            console.log(error);
-            })
-        }
     }
     
-    runDocument = async () =>{
-      axios.post('/runDocument', {
-        code: this.state.code,
-      })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    }
-
-    updateDocument = async () => {
-        axios.post('/updateDocument', {
-            content: this.state.code,
-            roomID:this.state.room
-          })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-    }
-
     render(){
         const codeMirrorOptions = {
             theme: 'material',

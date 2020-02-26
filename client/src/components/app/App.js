@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Route,
 } from "react-router-dom";
-import CodeEditor from '../codeEditor/CodeEditor';
 import Layout from '../../layouts/layout.js';
 import './App.css';
 
@@ -11,10 +10,10 @@ import './App.css';
 function App() {
 
   return (
-    <div className="App">
+    <div>
       <Router>
-        <Route exact path="/" render={props => <Layout><CodeEditor {...props}/></Layout>}/>
-        <Route exact path="/:documentId"  render={props => <Layout><CodeEditor {...props}/></Layout>}/>
+        <Route exact path="/" render={props => <Layout {...props}/>}/>
+        <Route exact path="/:documentId"  render={props => <Layout {...props}/>}/>
       </Router>  
     </div>
   );

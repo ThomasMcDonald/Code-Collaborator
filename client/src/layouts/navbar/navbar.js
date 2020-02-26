@@ -19,19 +19,19 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function NavBar() {
+export default function NavBar(props) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
+
           <Typography variant="h6" className={classes.title}>
-            Code Editor
+            Code Editor - {props.title}
           </Typography>
+          <Button color="inherit" onClick={props.saveFunction}>Save</Button>
+          <Button color="inherit" onClick={props.runFunction}>Run</Button>
         </Toolbar>
       </AppBar>
     </div>
