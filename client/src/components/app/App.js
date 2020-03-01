@@ -10,12 +10,10 @@ import './App.css';
 function App() {
 
   return (
-    <div>
       <Router>
         <Route exact path="/" render={props => <Layout {...props}/>}/>
         <Route exact path="/:documentId"  render={props => <Layout {...props}/>}/>
       </Router>  
-    </div>
   );
 }
 

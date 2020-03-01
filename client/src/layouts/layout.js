@@ -1,32 +1,14 @@
-import React, {useState, Component} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, {Component} from 'react';
 import axios from 'axios';
-import styles from '../components/codeEditor/CodeEditor.css';
-
-import Grid from '@material-ui/core/Grid';
+import {ControlledEditor as Editor} from "@monaco-editor/react";
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import NavBar from './navbar/navbar.js';
-import { Controlled as CodeMirror } from 'react-codemirror2';
 import Terminal from '../components/terminal/Terminal';
+import green from '@material-ui/core/colors/green';
+import Button from '@material-ui/core/Button';
 
-
-// codemirror stuff that may or may not work properly
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/material.css';
-
-import 'codemirror/mode/javascript/javascript';
-
-
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-}));
 // const classes = useStyles();
 
 
@@ -39,7 +21,9 @@ class Layout extends Component {
           room: null,
           title: '',
           code: '',
-          output: []
+          language: 'javascript',
+          output: [],
+          isResizing: false
       }
 
       this.runDocument = this.runDocument.bind(this);
@@ -47,8 +31,11 @@ class Layout extends Component {
       this.saveDocument = this.saveDocument.bind(this);
       this.handleHotKeys = this.handleHotKeys.bind(this);
       this.getDocument = this.getDocument.bind(this);
-  }
 
+
+      this.handleDividerDrag = this.handleDividerDrag.bind(this);
+  }
+  
   componentDidMount(){
     document.title = this.state.title;
       document.addEventListener('keydown', this.handleHotKeys);
@@ -73,6 +60,17 @@ class Layout extends Component {
       }
   }
 
+  handleDividerDrag(event){
+    if(event.type === 'mousedown'){
+      this.setState({isResizing: true})
+    }else if(event.type === 'mousemove'){
+      if(this.state.isResizing){
+        console.log('test');
+      }
+    }else{
+      this.setState({isResizing: false})
+    }
+  }
 
   getDocument = async (documentId) => {
     if(documentId){
@@ -97,7 +95,7 @@ class Layout extends Component {
   }
   
   saveDocument = async () => {
-      if(this.state.room !== null){
+      if(this.state.room){
           this.updateDocument();
       }else{
           const thus = this;
@@ -111,7 +109,7 @@ class Layout extends Component {
              thus.props.history.push(`/${response.data.roomID}`);
             // thus.props.match.params.documentId = response.data.roomID;
             document.title = response.data.title;
-              console.log(response);
+              console.log('generated room', response);
           })
           .catch(function (error) {
           console.log(error);
@@ -140,46 +138,59 @@ class Layout extends Component {
           roomID:this.state.room
         })
         .then(function (response) {
-          console.log(response);
+          console.log('saved document', response);
         })
         .catch(function (error) {
           console.log(error);
         });
   }
-  
-  render(){
-    const codeMirrorOptions = {
-      theme: 'material',
-      lineNumbers: true,
-      scrollbarStyle: null,
-      lineWrapping: true,
-      autoCloseBrackets: true
-    };
 
+    
+  render(){
     return (
-      // className={classes.root}
-      <div>
-        <NavBar title={this.state.title} saveFunction={this.saveDocument} runFunction={this.runDocument}/>
-        <Grid container height="100%">
-            <Grid item xs={6}>
-            <CodeMirror
+      <div className='container'>
+
+        {/* <NavBar title={this.state.title} saveFunction={this.saveDocument} runFunction={this.runDocument}/> */}
+        <div className="content">
+              <div className='left' style={width:'50%'}>
+              <Editor
                   value={this.state.code}
-                  options={{
-                    mode: 'javascript',
-                    ...codeMirrorOptions,
-                  }}
-                  onBeforeChange={(editor, data, code) => {
-                    this.setState({code})
-                  }}
+                  onChange={(e, code) => this.setState({code})}
+                  language={this.state.language}
+                  theme="dark"
+                  options={{minimap:{enabled:false}}}
                 />
-            </Grid>
-            <Grid item xs={6}>
-              <Terminal output={this.state.output}/>
-            </Grid>
-        </Grid>
-    </div>
+                
+              </div>
+              <div className="divider" onMouseDown={this.handleDividerDrag} onMouseUp={this.handleDividerDrag} onMouseMove={this.handleDividerDrag}></div>
+              <div className='right'>
+              
+                <Terminal output={this.state.output}/>
+              </div>
+          </div>
+      </div>
     )
   }
+}
+
+
+function codeToolBar(){
+  return (
+    <div className='codetoolbar'>
+                  {/* // make this use the material design colors */}
+                <Button variant="contained" style={{color:'white', backgroundColor:'green', marginLeft:'1em'}} onClick={this.runDocument}><PlayArrowIcon style={{paddingRight:'8px'}}/>Run</Button>
+                  
+                <Select
+                  style={{float:'right'}}
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={this.state.language}
+                  onChange={(e) => this.setState({language: e.target.value})}
+                >
+                  <MenuItem value={'javascript'}>Javascript</MenuItem>
+                </Select>
+              </div>
+  );
 }
 
 export default Layout;

@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import { useHistory } from "react-router-dom";
 import { withRouter } from 'react-router'
+ // code editors
 import { Controlled as CodeMirror } from 'react-codemirror2';
+import MonacoEditor from 'react-monaco-editor';
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -50,7 +52,12 @@ class CodeEditor extends Component {
             $event.preventDefault();
         }
     }
-    
+
+    editorDidMount(editor, monaco) {
+      console.log('editorDidMount', editor);
+      editor.focus();
+    }
+
     render(){
         const codeMirrorOptions = {
             theme: 'material',
@@ -70,7 +77,17 @@ class CodeEditor extends Component {
                 <button onClick={this.runDocument}>Run</button>
 
                 </div>
-                <CodeMirror
+                <MonacoEditor
+                  width="800"
+                  height="600"
+                  language="javascript"
+                  theme="vs-dark"
+                  value={code}
+                  options={(code) => this.setState({code})}
+                  onChange={this.onChange}
+                  editorDidMount={this.editorDidMount}
+                />
+                {/* <CodeMirror
                   value={this.state.code}
                   options={{
                     mode: 'javascript',
@@ -79,7 +96,7 @@ class CodeEditor extends Component {
                   onBeforeChange={(editor, data, code) => {
                     this.setState({ code });
                   }}
-                />
+                /> */}
         </div>
         )
     }

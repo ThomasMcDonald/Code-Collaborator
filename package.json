@@ -2,11 +2,12 @@
   "name": "mean-stack-code-collaborator",
   "version": "0.0.0",
   "scripts": {
-    "start": "nodemon server.js --ignore './tmp'",
+    "start": "node server.js",
+    "refresh": "nodemon server.js --ignore './tmp'",
     "migrate": "sequelize db:migrate",
     "test2": "mocha ./tests/mocha.js",
     "test": "artillery run ./tests/stressing.yaml",
-    "concurrent": "concurrently \"cd client && npm run start\" \"npm run start\""
+    "concurrent": "concurrently \"cd client && npm run start\" \"npm run refresh\""
   },
   "private": true,
   "dependencies": {
@@ -20,6 +21,7 @@
     "mocha": "^5.2.0",
     "mongoose": "^5.7.6",
     "mysql2": "^2.0.2",
+    "nodemon": "^2.0.2",
     "rxjs": "^6.2.2",
     "rxjs-compat": "^6.3.3",
     "sequelize": "^5.21.3",

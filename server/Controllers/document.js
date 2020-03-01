@@ -13,6 +13,7 @@ module.exports = {
         },
          update(req,res){
             const {title, roomID, content } = req.body;
+            console.log(title, roomID, content)
             return Document.update({
                 title,
                 content,
