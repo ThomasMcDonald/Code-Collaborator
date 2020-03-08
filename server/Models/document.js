@@ -1,29 +1,29 @@
-module.exports = function(mongoose) {
-
-var DocumentSchema =  mongoose.Schema({
-  _roomID: {
-    type: String,
-    required:true
-  },
-  _title:{
-    type: String,
-    required:true
-  },
-  _dateCreated:{
-    type: String,
-    required:true
-  },
-  _content: {
-    type: Array,
-    required: true
-  },
-  action:{
-    type: String,
-    required: false
-  }
-});
-
-
-var Document = mongoose.model('Document', DocumentSchema);
-return Document;
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Document = sequelize.define('Document', {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    roomID: DataTypes.STRING, 
+    title: {
+      field: 'title',
+      type:DataTypes.STRING,
+      defaultValue: sequelize.NOW 
+    },
+    content: DataTypes.STRING,
+    createdAt: {
+      field: 'created_at',
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+        field: 'updated_at',
+        type: DataTypes.DATE,
+    },
+  }, {});
+  Document.associate = function(models) {
+    // associations can be defined here
+  };
+  return Document;
 };
