@@ -1,4 +1,8 @@
-html,body{margin:0;padding:0;}
+html,body{
+  margin:0;
+  padding:0;
+  background-color: #303133;
+}
 
 .container {
 	display: flex;

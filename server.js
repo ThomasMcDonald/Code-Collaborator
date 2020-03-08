@@ -14,9 +14,11 @@ const bodyPaser = bodyParser.json()
 const Sequelize = require('sequelize');
 
 const port = process.env.PORT || 8080;
+const CONCURRENCY = process.env.WEB_CONCURRENCY || 1;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyPaser);
+;
 
 const sequelize = new Sequelize('code-collab', 'root', '', {
 	host: 'localhost',
@@ -48,4 +50,3 @@ if (!fs.existsSync('./tmp')){
 require(__dirname + '/server/Utils/sockets')(app, io)
 
 require(__dirname + '/server/Utils/routes')(app, path, util)
-

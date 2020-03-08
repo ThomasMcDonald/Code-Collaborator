@@ -1,17 +1,48 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {ControlledEditor as Editor} from "@monaco-editor/react";
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import NavBar from './navbar/navbar.js';
-import Terminal from '../components/terminal/Terminal';
-import green from '@material-ui/core/colors/green';
-import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 
-// const classes = useStyles();
+import ReactMarkdown from 'react-markdown';
 
+function DocumentHeader({title, languageData}){
+  return (
+      <Box
+        display="flex"
+        flexWrap="nowrap"
+        alignContent="flex-start"
+        p={1}
+        m={1}
+        bgcolor="#303133"
+        flexDirection='row'
+        css={{ maxWidth: '100%', height: 75, color:'white', fontWeight:'bold'}}
+      >
+        <Box p={1}  width="50%">
+        <Box flexDirection="row">
+          {title}
+        </Box>
+        </Box>
+        <Box p={1} width="50%">
+        </Box>
+      </Box>
+      );
+}
 
+function CodeContainer({title, height, mt, editorData}){
+  return (
+    <Box m={1} mt={mt} bgcolor='#262729' width='100%' height={height}> 
+      <div style={{padding:'10px', fontSize:'16px'}}>{title}</div>
+      <Editor
+        value={editorData ? editorData.value : ''}
+        onChange={editorData ? editorData.onChange : ()=>{}}
+        language={editorData ? editorData.language : 'javascript' }
+        theme="dark"
+        options={{minimap:{enabled:false}}}
+        height='100%'
+      />
+    </Box>
+  )
+}
 
 class Layout extends Component {
   constructor(props){
@@ -19,11 +50,11 @@ class Layout extends Component {
 
       this.state = {
           room: null,
-          title: '',
+          title: 'Cheeky FizzBuzz Problem',
           code: '',
           language: 'javascript',
           output: [],
-          isResizing: false
+          description: ''        
       }
 
       this.runDocument = this.runDocument.bind(this);
@@ -31,9 +62,9 @@ class Layout extends Component {
       this.saveDocument = this.saveDocument.bind(this);
       this.handleHotKeys = this.handleHotKeys.bind(this);
       this.getDocument = this.getDocument.bind(this);
-
-
-      this.handleDividerDrag = this.handleDividerDrag.bind(this);
+      this.onEditorValueChange = this.onEditorValueChange.bind(this);
+      this.changeDocumentLanguage = this.changeDocumentLanguage.bind(this);
+      
   }
   
   componentDidMount(){
@@ -58,18 +89,6 @@ class Layout extends Component {
         }
           
       }
-  }
-
-  handleDividerDrag(event){
-    if(event.type === 'mousedown'){
-      this.setState({isResizing: true})
-    }else if(event.type === 'mousemove'){
-      if(this.state.isResizing){
-        console.log('test');
-      }
-    }else{
-      this.setState({isResizing: false})
-    }
   }
 
   getDocument = async (documentId) => {
@@ -145,52 +164,64 @@ class Layout extends Component {
         });
   }
 
-    
-  render(){
-    return (
-      <div className='container'>
+  onEditorValueChange = async (e, code) => {
+    console.log(code);
+    this.setState({code})
+  }
 
-        {/* <NavBar title={this.state.title} saveFunction={this.saveDocument} runFunction={this.runDocument}/> */}
-        <div className="content">
-              <div className='left' style={width:'50%'}>
-              <Editor
-                  value={this.state.code}
-                  onChange={(e, code) => this.setState({code})}
-                  language={this.state.language}
-                  theme="dark"
-                  options={{minimap:{enabled:false}}}
-                />
-                
-              </div>
-              <div className="divider" onMouseDown={this.handleDividerDrag} onMouseUp={this.handleDividerDrag} onMouseMove={this.handleDividerDrag}></div>
-              <div className='right'>
-              
-                <Terminal output={this.state.output}/>
-              </div>
-          </div>
+  changeDocumentLanguage = (e) =>{
+    this.setState({language: e.target.value})
+  }
+  
+  render(){
+    const supportedLanguages = [
+      'Javascript'
+    ];
+
+    const languageData = {
+      documentLanguage: this.state.language, 
+      languageOnChange: this.changeDocumentLanguage,
+      supportedLanguages, 
+    };
+
+    const editorData = {
+      language: this.state.language,
+      value: this.state.code,
+      onChange: this.onEditorValueChange,
+    };
+    const input =  '# This is a header\n\nAnd this is a paragraph';
+    
+    return (
+      <div style={{ width: '100%' }}>
+        <DocumentHeader title={this.state.title} languageData={languageData}/>
+        <Box
+        display="flex"
+        flexWrap="nowrap"
+        alignContent="flex-start"
+        flexDirection='row'
+        m={1}
+        p={1}
+        // bgcolor="#1B1C1E"
+        css={{ maxWidth: '100%', height: 1000, color:'white' }}
+      >
+        {/* Left column  */}
+        <Box m={1} p={1} width="50%" bgcolor='#262729'>
+          Problem Instructions
+          <ReactMarkdown source={this.state.description} />
+        </Box>
+
+        {/* Right column */}
+        <Box m={1} mt={0} width="50%">
+        <CodeContainer title='Solution' height='50%' editorData={editorData}/>
+        <CodeContainer title='Tests' height='40%' mt={6}/>
+      </Box>
+        
+
+        
+      </Box>
       </div>
     )
   }
-}
-
-
-function codeToolBar(){
-  return (
-    <div className='codetoolbar'>
-                  {/* // make this use the material design colors */}
-                <Button variant="contained" style={{color:'white', backgroundColor:'green', marginLeft:'1em'}} onClick={this.runDocument}><PlayArrowIcon style={{paddingRight:'8px'}}/>Run</Button>
-                  
-                <Select
-                  style={{float:'right'}}
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={this.state.language}
-                  onChange={(e) => this.setState({language: e.target.value})}
-                >
-                  <MenuItem value={'javascript'}>Javascript</MenuItem>
-                </Select>
-              </div>
-  );
 }
 
 export default Layout;
