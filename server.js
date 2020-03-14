@@ -18,11 +18,11 @@ const CONCURRENCY = process.env.WEB_CONCURRENCY || 1;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyPaser);
-;
 
 const sequelize = new Sequelize('code-collab', 'root', '', {
 	host: 'localhost',
-	dialect: 'mysql'
+  dialect: 'mysql',
+  logging: false
   });
 
   sequelize
@@ -49,4 +49,6 @@ if (!fs.existsSync('./tmp')){
 // const io = require('socket.io').listen(server);
 require(__dirname + '/server/Utils/sockets')(app, io)
 
-require(__dirname + '/server/Utils/routes')(app, path, util)
+require(__dirname + '/server/Utils/routes')(app, path, util);
+
+module.exports = app;

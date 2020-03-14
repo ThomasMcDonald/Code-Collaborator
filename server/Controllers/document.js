@@ -13,7 +13,6 @@ module.exports = {
         },
          update(req,res){
             const {title, roomID, content } = req.body;
-            console.log(title, roomID, content)
             return Document.update({
                 title,
                 content,
@@ -23,7 +22,7 @@ module.exports = {
                     roomID
                 }
             })
-            .then(document => res.status(201).send(document))
+            .then(document =>res.status(200).send(document))
             .catch(error => res.status(400).send(error))
         },
         get(req,res){
@@ -40,7 +39,7 @@ module.exports = {
                 }
             })
             .then((document, created) => {
-                res.status(201).send(document[0])
+                res.status(200).send(document[0]);
             })
             .catch(error => res.status(400).send(error))
         }
